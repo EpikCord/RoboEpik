@@ -1,14 +1,6 @@
+from .config import Config
 from EpikCord import Client, Intents
-from json import load
 
-class Config:
-    def __init__(self):
-        with open('config.json') as f:
-            self.data = load(f)
-        
-    @property
-    def token(self):
-        return self.data['token']
 
 class RoboEpik(Client):
     def __init__(self, *args, **kwargs):
@@ -23,7 +15,3 @@ class RoboEpik(Client):
 
     async def on_ready(self):
         print(f"I am ready! My name is {self.user.name}")
-
-client = RoboEpik()
-
-client.login()
