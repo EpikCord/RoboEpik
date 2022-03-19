@@ -13,7 +13,7 @@ Welcome to the **official** repository of RoboEpik.
 
 ### Introduction
 
-RoboEpik is a multi purpose bot for EpikCord.py RoboEpik is the main (first) bot of [Epikcord.py](). It is created to serve a testing bot in the [Epikcord.py Discord Server]().
+RoboEpik is a multi purpose bot for EpikCord.py RoboEpik is the main (first) bot of [Epikcord.py](https:/github.com/Epikcord/Epikcord.py). It is created to serve a testing bot in the [Epikcord.py Discord Server](https://discord.gg/4R473R73kQ).
 
 Our main RoboEpik server is the Epikcord.py server. 
 
@@ -37,4 +37,4 @@ You have found a mistake or typo or bug! You can report it in our issue sections
 2. Edit and make changes
 3. Open a pull request 
 
-If you don't understand, read more [here]()
+If you don't understand, read more [here](https://docs.github.com/en/get-started/quickstart/contributing-to-projects)
