@@ -1,4 +1,3 @@
-from .sections import *
 from .config import Config
 from EpikCord import Client, Intents
 
