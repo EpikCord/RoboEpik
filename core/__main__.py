@@ -1,6 +1,13 @@
-from .config import Config
-from EpikCord import Client, Intents, Button, ActionRow, Modal, ApplicationCommandInteraction, TextInput, Embed
+import aiohttp
+from config import Config
+from EpikCord import Client, Intents, Button, ActionRow, Modal, ApplicationCommandInteraction, TextInput, Embed, Message
+import logging
 
+logger = logging.getLogger('EpikCord')
+logger.setLevel(logging.DEBUG)
+handler = logging.FileHandler(filename='.\\epik.log', encoding='utf-8', mode='w')
+handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
+logger.addHandler(handler)
 class RoboEpik(Client):
     def __init__(self, config: Config):
         super().__init__(
@@ -90,5 +97,28 @@ async def anonymous_help_modal_submit(interaction, code, issue_description, full
         ]
         await interaction.reply(embeds = embed)
     await interaction.create_followup()
+
+GH_API_SITE = "https://api.github.com"
+
+@client.event
+async def on_message_create(message:Message):
+    if message.content.startswith("##") :#Represents a github issue
+        gh_repo_id = message.content.strip("##")
+        async with aiohttp.ClientSession() as session:
+            async with session.get(f"{GH_API_SITE}/repos/EpikCord/EpikCord.py/issues/{gh_repo_id}") as resp:
+                resp_stat = resp.status
+                response: dict = await resp.json()
+                title = response.get("title")
+                user = response.get("user")
+                user_name = user.get("login")
+            
+                body = response.get("body")
+                url = response.get("url")
+                
+                if resp_stat == 200:
+
+                    issue_or_pr_em = [Embed(title = f"Issue/PR {gh_repo_id}", description=f"Title = {title}\nBy: {user_name}\nBody: {body}", footer={"text":f"For more info, visit {url}"})]
+                await message.channel.send(embeds=issue_or_pr_em)
+
 
 client.login()
