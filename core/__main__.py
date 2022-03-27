@@ -130,8 +130,7 @@ async def on_message_create(message:Message):
         elif resp_stat == 410:
             await message.channel.send(content = "The resource said bye-bye to us and went away 🤣.")
     if message.content.startswith("re#") :#Represents a github issue
-        gh_repo_id = message.content.strip("##")
-        
+        gh_repo_id = message.content.strip("re#") 
         resp= await client.http.get(url=f"{GH_API_SITE}/repos/EpikCord/RoboEpik/issues/{gh_repo_id}",to_discord = False)
         
         resp_stat = resp.status
