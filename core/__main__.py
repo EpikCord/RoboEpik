@@ -1,4 +1,5 @@
-import aiohttp
+
+from types import NoneType
 from config import Config
 from EpikCord import Client, Intents, Button, ActionRow, Modal, ApplicationCommandInteraction, TextInput, Embed, Message
 import logging
@@ -104,21 +105,29 @@ GH_API_SITE = "https://api.github.com"
 async def on_message_create(message:Message):
     if message.content.startswith("##") :#Represents a github issue
         gh_repo_id = message.content.strip("##")
-        async with aiohttp.ClientSession() as session:
-            async with session.get(f"{GH_API_SITE}/repos/EpikCord/EpikCord.py/issues/{gh_repo_id}") as resp:
-                resp_stat = resp.status
-                response: dict = await resp.json()
-                title = response.get("title")
-                user = response.get("user")
-                user_name = user.get("login")
-            
-                body = response.get("body")
-                url = response.get("url")
+        print("succ1")
+        resp= await client.http.get(url=f"{GH_API_SITE}/repos/EpikCord/EpikCord.py/issues/{gh_repo_id}",to_discord = False)
+        print("succ2")
+        resp_stat = resp.status
+        print("succ3")
+        response: dict = await resp.json()
+        print("succ4")
+        title = response.get("title")
+        print("succ5")
+        user = response.get("user")
+        print("succ6")
+        user_name = ""
+        print("succ7") # we need to fix the issue where there is no login for discussions
+        body = response.get("body")
+        print("succ8")
+        url= response.get("html_url")
+        print("succ9")
+        
                 
-                if resp_stat == 200:
-
-                    issue_or_pr_em = [Embed(title = f"Issue/PR {gh_repo_id}", description=f"Title = {title}\nBy: {user_name}\nBody: {body}", footer={"text":f"For more info, visit {url}"})]
-                await message.channel.send(embeds=issue_or_pr_em)
-
+        if resp_stat == 200:
+            issue_or_pr_em = [Embed(title = f"Issue/PR {gh_repo_id}", description=f"Title = {title}\nBy: {user_name}\nBody: {body}", footer={"text":f"For more info, visit {url}"})]
+            print("succ10")
+        await message.channel.send(embeds=issue_or_pr_em)
+        print("succ11")
 
 client.login()
