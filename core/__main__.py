@@ -126,8 +126,12 @@ async def on_message_create(message:Message):
                 
         if resp_stat == 200:
             issue_or_pr_em = [Embed(title = f"Issue/PR {gh_repo_id}", description=f"Title = {title}\nBy: {user_name}\nBody: {body}", footer={"text":f"For more info, visit {url}"})]
-            
-        await message.channel.send(embeds=issue_or_pr_em)
+            await message.channel.send(embeds=issue_or_pr_em)
+        elif resp_stat == 404:
+            await message.channel.send(content = "The Resource you mentioned was not there.")
+        elif resp_stat == 410:
+            await message.channel.send(content = "The resource said bye-bye to us and went away 🤣.")
+        
         
 
 client.login()
