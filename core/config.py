@@ -1,10 +1,7 @@
 from json import load
 
 class Config:
-    def __init__(self):
-        with open("config.json") as f:
-            self.config = load(f)
-    
-    @property
-    def token(self):
-        return self.config.get("token")
+    with open("config.json") as config_file:
+        config = load(config_file)
+    token = config["token"]
+    pastebin_token = config["pastebin_key"]
