@@ -1,5 +1,3 @@
-
-from types import NoneType
 from config import Config
 from EpikCord import Client, Intents, Button, ActionRow, Modal, ApplicationCommandInteraction, TextInput, Embed, Message
 import logging
@@ -116,16 +114,44 @@ async def on_message_create(message:Message):
         
         user = response.get("user")
         
-        user_name = ""
+        user_name = user.get("login")
          # we need to fix the issue where there is no login for discussions
         body = response.get("body")
         
         url= response.get("html_url")
-       
+        state = response.get("state")       
         
                 
         if resp_stat == 200:
-            issue_or_pr_em = [Embed(title = f"Issue/PR {gh_repo_id}", description=f"Title = {title}\nBy: {user_name}\nBody: {body}", footer={"text":f"For more info, visit {url}"})]
+            issue_or_pr_em = [Embed(title = f"Issue/PR {gh_repo_id}", description=f"Title = {title}\nState = {state}\nBy: {user_name}\nBody: {body}", footer={"text":f"For more info, visit {url}"})]
+            await message.channel.send(embeds=issue_or_pr_em)
+        elif resp_stat == 404:
+            await message.channel.send(content = "The Resource you mentioned was not there.")
+        elif resp_stat == 410:
+            await message.channel.send(content = "The resource said bye-bye to us and went away 🤣.")
+    if message.content.startswith("re#") :#Represents a github issue
+        gh_repo_id = message.content.strip("##")
+        
+        resp= await client.http.get(url=f"{GH_API_SITE}/repos/EpikCord/RoboEpik/issues/{gh_repo_id}",to_discord = False)
+        
+        resp_stat = resp.status
+        
+        response: dict = await resp.json()
+        
+        title = response.get("title")
+        
+        user = response.get("user")
+        
+        user_name = user.get("login")
+         # we need to fix the issue where there is no login for discussions
+        body = response.get("body")
+        
+        url= response.get("html_url")
+        state = response.get("state")       
+        
+                
+        if resp_stat == 200:
+            issue_or_pr_em = [Embed(title = f"Issue/PR {gh_repo_id}", description=f"Title = {title}\nState = {state}\nBy: {user_name}\nBody: {body}", footer={"text":f"For more info, visit {url}"})]
             await message.channel.send(embeds=issue_or_pr_em)
         elif resp_stat == 404:
             await message.channel.send(content = "The Resource you mentioned was not there.")
