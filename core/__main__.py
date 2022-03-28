@@ -104,7 +104,7 @@ async def help(interaction:ApplicationCommandInteraction):
         description= "1. You can simply type ## for any EpikCord repository Issue/PR and re# for The Official **RoboEpik** repository Issues/PR", 
         color=0x00f700
     )]
-    await interaction.reply(content= "LOLOL there is no help command yet. Stay tuned")
+    await interaction.reply(embeds=help_embed)
 
 GH_API_SITE = "https://api.github.com"
 
