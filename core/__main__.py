@@ -1,6 +1,12 @@
-from .config import Config
-from EpikCord import Client, Intents, Button, ActionRow, Modal, ApplicationCommandInteraction, TextInput, Embed
+from config import Config
+from EpikCord import Client, Intents, Button, ActionRow, Modal, ApplicationCommandInteraction, TextInput, Embed, Message,Colour
+import logging
 
+logger = logging.getLogger('EpikCord')
+logger.setLevel(logging.DEBUG)
+handler = logging.FileHandler(filename='.\\epik.log', encoding='utf-8', mode='w')
+handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
+logger.addHandler(handler)
 class RoboEpik(Client):
     def __init__(self, config: Config):
         super().__init__(
@@ -90,5 +96,77 @@ async def anonymous_help_modal_submit(interaction, code, issue_description, full
         ]
         await interaction.reply(embeds = embed)
     await interaction.create_followup()
+
+@client.command(name="help", description="The official RoboEpik help command")
+async def help(interaction:ApplicationCommandInteraction):
+    help_embed= [Embed(
+        title= "Help Command For RoboEpik", 
+        description= "1. You can simply type ## for any EpikCord repository Issue/PR and re# for The Official **RoboEpik** repository Issues/PR", 
+        color=0x00f700
+    )]
+    await interaction.reply(embeds=help_embed)
+
+GH_API_SITE = "https://api.github.com"
+
+@client.event
+async def on_message_create(message:Message):
+    #Note: This solution works well for both PR and Issue but not discussions maybe because discussions are way different than PRs or issues
+    if message.content.startswith("##") :#Represents a github issue
+        gh_repo_id = message.content.strip("##")
+        
+        resp= await client.http.get(url=f"{GH_API_SITE}/repos/EpikCord/EpikCord.py/issues/{gh_repo_id}",to_discord = False)
+        
+        resp_stat = resp.status
+        
+        response: dict = await resp.json()
+        
+        title = response.get("title")
+        
+        user = response.get("user")
+        
+        user_name = user.get("login")
+         # we need to fix the issue where there is no login for discussions
+        body = response.get("body")
+        
+        url= response.get("html_url")
+        state = response.get("state")       
+        
+                
+        if resp_stat == 200:
+            issue_or_pr_em = [Embed(title = f"Issue/PR {gh_repo_id}", description=f"Title = {title}\nState = {state}\nBy: {user_name}\nBody: {body}",color=0x00FF00 if state == "open" else 0xFF0000, footer={"text":f"For more info, visit {url}"})]
+            await message.channel.send(embeds=issue_or_pr_em)
+        elif resp_stat == 404:
+            await message.channel.send(content = "The Resource you mentioned was not there.")
+        elif resp_stat == 410:
+            await message.channel.send(content = "The resource said bye-bye to us and went away 🤣.")
+    if message.content.lower().startswith("re#") :#Represents a github issue
+        gh_repo_id = message.content.lower().strip("re#") 
+        resp= await client.http.get(url=f"{GH_API_SITE}/repos/EpikCord/RoboEpik/issues/{gh_repo_id}",to_discord = False)
+        
+        resp_stat = resp.status
+        
+        response: dict = await resp.json()
+        
+        title = response.get("title")
+        
+        user = response.get("user")
+        
+        user_name = user.get("login")
+
+        body = response.get("body")
+        
+        url= response.get("html_url")
+        state = response.get("state")       
+        
+                
+        if resp_stat == 200:
+            issue_or_pr_em = [Embed(title = f"Issue/PR {gh_repo_id}", description=f"Title = {title}\nState = {state}\nBy: {user_name}\nBody: {body}",color=0x00FF00 if state == "open" else 0xFF0000, footer={"text":f"For more info, visit {url}"})]
+            await message.channel.send(embeds=issue_or_pr_em)
+        elif resp_stat == 404:
+            await message.channel.send(content = "The Resource you mentioned was not there.")
+        elif resp_stat == 410:
+            await message.channel.send(content = "The resource said bye-bye to us and went away 🤣.")
+        
+        
 
 client.login()
