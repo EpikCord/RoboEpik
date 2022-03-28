@@ -1,5 +1,5 @@
 from config import Config
-from EpikCord import Client, Intents, Button, ActionRow, Modal, ApplicationCommandInteraction, TextInput, Embed, Message, Colour
+from EpikCord import Client, Intents, Button, ActionRow, Modal, ApplicationCommandInteraction, TextInput, Embed, Message
 import logging
 
 logger = logging.getLogger('EpikCord')
@@ -123,12 +123,7 @@ async def on_message_create(message:Message):
         
                 
         if resp_stat == 200:
-            issue_or_pr_em = [Embed(title = f"Issue/PR {gh_repo_id}")]
-            issue_or_pr_em.add_field(name = "Title: ", value=title)
-            issue_or_pr_em.add_field(name = "State: ", value=state)
-            issue_or_pr_em.add_field(name = "Opened by: ", value=user_name)
-            issue_or_pr_em.add_field(name = "Description: ", value=body)
-            issue_or_pr_em.set_footer(text = f"See more here: {url}")
+            issue_or_pr_em = [Embed(title = f"Issue/PR {gh_repo_id}", description=f"Title = {title}\nState = {state}\nBy: {user_name}\nBody: {body}", footer={"text":f"For more info, visit {url}"})]
             await message.channel.send(embeds=issue_or_pr_em)
         elif resp_stat == 404:
             await message.channel.send(content = "The Resource you mentioned was not there.")
@@ -155,11 +150,7 @@ async def on_message_create(message:Message):
         
                 
         if resp_stat == 200:
-            issue_or_pr_em = [Embed(title = f"Issue/PR {gh_repo_id}")]
-            issue_or_pr_em.add_field(name = "Title: ", value=title)
-            issue_or_pr_em.add_field(name = "State: ", value=state)
-            issue_or_pr_em.add_field(name = "Description: ", value=body)
-            issue_or_pr_em.set_footer(text = f"See more here: {url}")
+            issue_or_pr_em = [Embed(title = f"Issue/PR {gh_repo_id}", description=f"Title = {title}\nState = {state}\nBy: {user_name}\nBody: {body}", footer={"text":f"For more info, visit {url}"})]
             await message.channel.send(embeds=issue_or_pr_em)
         elif resp_stat == 404:
             await message.channel.send(content = "The Resource you mentioned was not there.")
