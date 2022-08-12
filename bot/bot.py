@@ -19,7 +19,7 @@ class RoboEpik(Client):
         self.logger = getLogger("EpikCord")
         self.logger.setLevel(-100)  # Catch all.
         handler = FileHandler(filename="RoboEpikLogs.log", encoding="utf-8", mode="w")
-        self.handler.setFormatter(
+        handler.setFormatter(
             Formatter("%(asctime)s: %(levelname)s: %(name)s: %(message)s")
         )
         self.logger.addHandler(handler)
