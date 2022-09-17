@@ -4,7 +4,7 @@ from sys import platform
 
 print("Installing dependencies...")
 system("pip install -r requirements.txt --force-reinstall")
-if platform.startswith('linux'):
+if platform.startswith("linux"):
     system("clear")
     print("Done!")
     print("Starting up...")
