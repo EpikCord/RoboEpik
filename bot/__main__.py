@@ -84,6 +84,7 @@ async def anonymous_help_button_click(interaction, _):
         )
     )
 
+
 @client.component("anonymous_help_modal")
 async def anonymous_help_modal_submit(
     interaction: ModalSubmitInteraction,
