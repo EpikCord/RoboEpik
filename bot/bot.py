@@ -12,10 +12,11 @@ class RoboEpik(Client):
         intents.message_content = True
         intents.guild_members = True
 
-        super().__init__(config.token, intents, overwrite_commands_on_ready=False)
+        super().__init__(config.token, intents)
         self.commands = {}
         self.command_utils: CommandUtils = CommandUtils()
         self.config = config
+
         self.logger = getLogger("EpikCord")
         self.logger.setLevel(-100)  # Catch all.
         handler = FileHandler(filename="RoboEpikLogs.log", encoding="utf-8", mode="w")
